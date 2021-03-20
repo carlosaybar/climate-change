@@ -1,0 +1,150 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+---
+title: "climate change"
+author: "Carlos aybar"
+output: html_notebook
+
+---
+
+### install tidyverse package
+```{r}
+install.packages("tidyverse")
+install.packages("corrplot")
+install.packages("Metrics")
+
+```
+
+
+### load all the necessary libraries
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(corrplot)
+library(Metrics)
+```
+
+### importing and structuring the data
+```{r}
+climate_change <- read.csv("climate_change.csv")
+
+structure(climate_change)
+```
+
+# linear regression for carbon dioxide over the years
+Given 1 independent variable, predict the dependent variable.
+Given the goal difference, let's predict the team's final position.
+```{r}
+model <- lm(carbon_dioxide ~ Year, data = climate_change)
+#predicting the amount of co2 in the atmosphere by 2050
+test <- data.frame(Year = c(2050))
+
+# Predict the position with the model and test data
+predictedCO2 <- predict(model, test)
+cat("the amount of co2 in the atmosphere by 2050 will be: ", predictedCO2)
+
+```
+
+
+# first correlation plot
+
+```{r}
+plot(climate_change$carbon_dioxide, climate_change$Year, xlab = "Carbon Dioxide (ppmv)", ylab= "Year", main = "Carbon dioxide production over the years", col = "red")
+lines(lowess(climate_change$carbon_dioxide, climate_change$Year), col = "blue")
+```
+
+
+# lm model for temperature change based on methane production
+Given 1 independent variable, predict the dependent variable.
+Given the goal difference, let's predict the team's final position.
+```{r}
+model <- lm(temp_change ~ methane, data = climate_change)
+#predicting the change in temperature when methane level is 2000
+test <- data.frame(methane = c(2000))
+
+# Predict the temperature change in celsius with the model and test data
+predictedTemperature <- predict(model, test)
+cat("the change in temperature when there is a methane production of 2000 ppmv is: ", predictedTemperature, "°C")
+
+```
+# Correlation: Pairs Plot
+
+
+```{r}
+
+plot(climate_change$methane, climate_change$temp_change, xlab = "Methane(ppmv)", ylab= "Temperature Change(°C)", main = "Effect methane on temperature change", col = "blue")
+lines(lowess(climate_change$methane, climate_change$temp_change), col = "red")
+
+```
+# lm model for the effect of temperature change on El Niño
+Given 1 independent variable, predict the dependent variable.
+Given the goal difference, let's predict the team's final position.
+```{r}
+model <- lm(MEI ~ temp_change, data = climate_change)
+#predicting the change in MEI when temperature chagnes by 1 degree celcius
+test <- data.frame(temp_change = c(1))
+
+# Predict the temperature change in celsius with the model and test data
+predictedMEI <- predict(model, test)
+cat("If the temperature changes by 1°C the IME will change by: ", predictedMEI, "ppmv")
+
+
+```
+
+#visualization
+
+```{r}
+plot(climate_change$MEI, climate_change$temp_change, xlab = "multivariate El Niño Index", ylab= "Temperature Change", main = "Effect of temperature change on the intensity of an El Niño Southern Oscillation", col = "red")
+lines(lowess(climate_change$MEI, climate_change$temp_change), col = "black")
+```
+
+
+
+# lm model for the effect of aerosols on solar irradiance
+Given 1 independent variable, predict the dependent variable.
+Given the goal difference, let's predict the team's final position.
+```{r}
+model <- lm(totalsolar_irradiance ~ Aerosols, data = climate_change)
+#predicting the change solar irradiance when aerosols are 0.1863
+test <- data.frame(Aerosols = c(0.1863))
+
+# Predict the temperature change in celsius with the model and test data
+predictedTSI <- predict(model, test)
+cat("0.1863nm aerosols will lead to : ", predictedTSI, "solar irradiance per unit area")
+
+```
+
+#visualization
+
+```{r}
+plot(climate_change$Aerosols, climate_change$totalsolar_irradiance, xlab = "Aerosols", ylab= "total solar irradiance", main = "Effect aerosols on total irradiance", col = "orange")
+lines(lowess(climate_change$Aerosols, climate_change$totalsolar_irradiance), col = "green")
+
+```
+
+
+
+
+# lm model to predict N2O production each month
+Given 1 independent variable, predict the dependent variable.
+Given the goal difference, let's predict the team's final position.
+```{r}
+model <- lm(nitrous_oxide ~ Year, data = climate_change)
+#predicting the change N2O by 2030
+test <- data.frame(Year = c(2030))
+
+# Predict the temperature change in celsius with the model and test data
+predictedN2O <- predict(model, test)
+cat("the amount of nitrous oxide in the air by 2030 will be: ", predictedN2O, "ppmv")
+
+```
+
+#visualization
+
+```{r}
+plot(climate_change$nitrous_oxide, climate_change$Year, xlab = "nitrous oxide", ylab= "Year", main = "Nitrous oxide production since 1980 year", col = "green")
+lines(lowess(climate_change$nitrous_oxide, climate_change$Year), col = "blue")
+```
